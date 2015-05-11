@@ -11,7 +11,8 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/context/spring-util.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	
+	 <mvc:default-servlet-handler/>
+			
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
 
