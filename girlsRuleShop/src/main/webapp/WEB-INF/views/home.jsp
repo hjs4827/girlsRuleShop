@@ -47,7 +47,7 @@
 	<!-- header 끝 -->
 	<!--  body 시작 -->
 	<div class="row">
-		<div class="col-md-12">안뇽 힘내라웅  > < 보고팡 팡팡팡!!</div>
+		<div class="col-md-12">안뇽 힘내라웅  > < 보고팡 팡팡팡!! re: 사랑행♥</div>
 	</div>
 	<!-- <tiles:insertAttribute name="body" /> -->
 	<!-- body 끝 -->
