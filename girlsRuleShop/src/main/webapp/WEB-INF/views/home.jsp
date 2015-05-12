@@ -6,8 +6,11 @@
 <head>
 <title>Home</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/fileinput.min.css" />
 <script src="js/jquery/jquery.min.js"></script>
+<script src="js/jquery/jquery.form.js"></script>
 <script src="js/bootstrap/bootstrap.min.js"></script>
+<script src="js/bootstrap_fileinput/fileinput.min.js"></script>
 </head>
 <body>
 	<!--  header  시작 -->
@@ -47,10 +50,45 @@
 	<!-- header 끝 -->
 	<!--  body 시작 -->
 	<div class="row">
-		<div class="col-md-12">안뇽 힘내라웅  > < 보고팡 팡팡팡!! re: 사랑행♥</div>
+		<form id="uploadForm" enctype="multipart/form-data">
+			<div class="col-md-6">
+			<div id="progressbox"><div id="progressbar"></div ><div id="statustxt">0%</div ></div>
+				<input id="input-1a" type="file" name="file1" id="file1"
+					class="file" data-show-preview="false">
+			</div>
+		</form>
 	</div>
 	<!-- <tiles:insertAttribute name="body" /> -->
 	<!-- body 끝 -->
-
+	<script>
+	 var progressbox     = $('#progressbox');
+	    var progressbar     = $('#progressbar');
+	    var statustxt   = $('#statustxt');
+	    var submitbutton    = $("input[type='submit']");
+	    var completed   = '0%';
+	    
+		$('#uploadForm').ajaxForm({
+			url : "upload",
+			type : "post",
+			success : function(data) {
+				if (data == "true") {
+					alert("업로드 성공하였습니다.");
+				} else {
+					alert("업로드 도중 오류가 발생하였습니다.");
+				}
+			},
+	        uploadProgress: function(event, position, total, percentComplete) { //on progress
+	            progressbar.width(percentComplete + '%') //update progressbar percent complete
+	            $('#statustxt').html(percentComplete + '%'); //update status text
+	            if(percentComplete>50) {
+	                statustxt.css('color','#fff'); //change status text to white after 50%
+	            }
+	        },
+	        complete: function(response) { // on complete
+	           // output.html("완료"); //update element with received data
+	           // myform.resetForm();  // reset form
+	        }
+		});
+	</script>
 </body>
 </html>

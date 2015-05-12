@@ -2,14 +2,21 @@ package com.jshan.girlsRule;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * Handles requests for the application home page.
@@ -34,6 +41,28 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 		
 		return "home";
+	}
+	
+	
+	@RequestMapping("/upload")
+	public @ResponseBody
+	String getUploadFile(HttpServletRequest request) {
+		
+		try {
+			Assert.state(request instanceof MultipartHttpServletRequest, "request !instanceof MultipartHttpServletRequest");
+			MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+			
+			Iterator<String> files = mRequest.getFileNames();
+			while(files.hasNext()){
+				String file_name = files.next();
+				MultipartFile file = mRequest.getFile(file_name);
+				System.out.println(file.isEmpty());
+				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return "true";
 	}
 	
 }
