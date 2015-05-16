@@ -1,14 +1,17 @@
-package com.jshan.girlsRule;
+package com.jshan.girlsRule.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
@@ -18,13 +21,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.jshan.girlsRule.dao.BaseDao;
+
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private Logger logger = LoggerFactory.getLogger(HomeController.class);
+	@Autowired
+	BaseDao dao;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -57,7 +64,6 @@ public class HomeController {
 				String file_name = files.next();
 				MultipartFile file = mRequest.getFile(file_name);
 				System.out.println(file.isEmpty());
-				
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
