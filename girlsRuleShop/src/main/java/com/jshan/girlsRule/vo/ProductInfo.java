@@ -12,12 +12,31 @@ package com.jshan.girlsRule.vo;
 public class ProductInfo {
 
 	private String productId;
-	private String productType;
+	private int productType;
 	private String fabric;
 	private String color;
 	private int stockCnt;
 	private String sizeInfo;
 	private String baseSize;
+
+	private ClothesTopDetails tops;
+	private ClothesPantsDetails pants;
+
+	public ClothesTopDetails getTops() {
+		return tops;
+	}
+
+	public void setTops(ClothesTopDetails tops) {
+		this.tops = tops;
+	}
+
+	public ClothesPantsDetails getPants() {
+		return pants;
+	}
+
+	public void setPants(ClothesPantsDetails pants) {
+		this.pants = pants;
+	}
 
 	public String getProductId() {
 		return productId;
@@ -27,11 +46,11 @@ public class ProductInfo {
 		this.productId = productId;
 	}
 
-	public String getProductType() {
+	public int getProductType() {
 		return productType;
 	}
 
-	public void setProductType(String productType) {
+	public void setProductType(int productType) {
 		this.productType = productType;
 	}
 

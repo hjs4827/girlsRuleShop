@@ -3,24 +3,55 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="test">
 	<insert id="testInsertProductInfo" parameterType="java.util.HashMap">
-		/* test.testInsertProductInfo hjs */
+		/*
+		test.testInsertProductInfo hjs */
 		INSERT INTO product_info
-			(product_id, product_type, fabric, color, stock_cnt, size_info, base_size)
+		(product_id,
+		product_type, fabric, color, stock_cnt, size_info, base_size)
 		VALUES
-			(#{product_id}, #{product_type}, #{fabric}, #{color}, #{stock_cnt}, #{size_info}, #{base_size})
+		(#{product_id}, #{product_type}, #{fabric}, #{color}, #{stock_cnt},
+		#{size_info}, #{base_size})
+	</insert>
+
+	<insert id="testInsertClothesTops" parameterType="com.jshan.girlsRule.vo.ClothesTopDetails">
+		/*
+		test.testInsertClothesTops hjs */
+		INSERT INTO CLOTHES_TOP_DETAIL (
+		product_id, shoulder, chest, sleeve,
+		armhole, total_length, elastic,
+		thickness,		diaphanousness, lining )
+		VALUES ( #{productId}, #{shoulder},
+		#{chest},		#{sleeve}, #{armhole}, #{totalLength}, #{elastic},
+		#{thickness}, #{diaphanousness}, #{lining} )
 	</insert>
 	
-	<select id="testRetrieveProductInfoById" parameterType="String"  resultType="java.util.HashMap">
+		<insert id="testInsertClothesPants" parameterType="com.jshan.girlsRule.vo.ClothesPantsDetails">
+		/*
+		test.testInsertClothesTops hjs */
+		INSERT INTO CLOTHES_PANTS_DETAIL (
+		product_id, waist, hip, thigh,
+		leg_opening_bottom, leg_opening_top, elastic,
+		thickness,		diaphanousness, lining )
+		VALUES ( #{productId}, #{waist},
+		#{hip},		#{thigh}, #{legOpeningBottom}, #{legOpeningTop}, #{elastic},
+		#{thickness}, #{diaphanousness}, #{lining} )
+	</insert>
+
+	<select id="testRetrieveProductInfoById" parameterType="String"
+		resultType="java.util.HashMap">
 		/* test.testRetrieveProductInfoById hjs */
 		SELECT
-			product_id, product_type, fabric, color, stock_cnt, size_info, base_size
+		product_id, product_type, fabric, color, stock_cnt, size_info,
+		base_size
 		from product_info
 		where product_id = #{product_id}
 	</select>
-	
+
 	<delete id="testDeleteProductInfo" parameterType="String">
-		/* test.testDeleteProductInfo hjs */
+		/*
+		test.testDeleteProductInfo hjs */
 		DELETE FROM product_info
-		WHERE product_id = #{product_id}
+		WHERE
+		product_id = #{product_id}
 	</delete>
 </mapper>

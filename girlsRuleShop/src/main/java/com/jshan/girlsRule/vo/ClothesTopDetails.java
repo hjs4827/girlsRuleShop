@@ -16,7 +16,7 @@ public class ClothesTopDetails {
 	private int sleeve;
 	private int armhole;
 	private int totalLength;
-	private int eleastic;
+	private int elastic;
 	private int thickness;
 	private int diaphanousness;
 	private int lining;
@@ -69,12 +69,12 @@ public class ClothesTopDetails {
 		this.totalLength = totalLength;
 	}
 
-	public int getEleastic() {
-		return eleastic;
+	public int getElastic() {
+		return elastic;
 	}
 
-	public void setEleastic(int eleastic) {
-		this.eleastic = eleastic;
+	public void setElastic(int elastic) {
+		this.elastic = elastic;
 	}
 
 	public int getThickness() {
@@ -106,7 +106,7 @@ public class ClothesTopDetails {
 		return "ClothesTopDetails [productId=" + productId + ", shoulder="
 				+ shoulder + ", chest=" + chest + ", sleeve=" + sleeve
 				+ ", armhole=" + armhole + ", totalLength=" + totalLength
-				+ ", eleastic=" + eleastic + ", thickness=" + thickness
+				+ ", elastic=" + elastic + ", thickness=" + thickness
 				+ ", diaphanousness=" + diaphanousness + ", lining=" + lining
 				+ "]";
 	}
