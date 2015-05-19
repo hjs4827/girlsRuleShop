@@ -16,9 +16,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
 		 // "file:src/main/webapp/WEB-INF/config/springmvc/dispatcher-servlet.xml"
-		  "classpath:/spring/datasource-context.xml"
-		, "classpath:/spring/sqlmap-context.xml"
-		, "classpath:/spring/transaction-context.xml"
+		"classpath:/spring/context-common.xml"
+		, "classpath:/spring/context-datasource.xml"
+		, "classpath:/spring/context-sqlmap.xml"
+		, "classpath:/spring/context-transaction.xml"
 })
 public class BaseDaoTest {
 //	private Logger logger = LoggerFactory.getLogger(BaseDaoTest.class);
