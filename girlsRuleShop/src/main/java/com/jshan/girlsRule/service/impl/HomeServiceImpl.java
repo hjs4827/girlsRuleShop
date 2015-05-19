@@ -32,9 +32,11 @@ public class HomeServiceImpl implements HomeService {
 	BaseDao dao;
 
 	@Override
-	public void readInfo() {
+	public List<ProductInfo> readInfo() {
 		// TODO Auto-generated method stub
-
+		ProductInfo info = new ProductInfo();
+		List<ProductInfo> list = dao.getList("main.getProductList", info);
+		return list;
 	}
 
 	@Override

@@ -24,14 +24,14 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Hello world</a>
+				<a class="navbar-brand" href="#">ADMIN</a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="#">화면 1<span class="sr-only">(current)</span></a></li>
-					<li><a href="#">화면 2</a></li>
+					<li><a href="#">상품 목록<span class="sr-only">(current)</span></a></li>
+					<li><a href="#">상품 상세</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
@@ -49,24 +49,89 @@
 	</nav>
 	<!-- header 끝 -->
 	<!--  body 시작 -->
-	<div class="row">
-		<form id="uploadForm" enctype="multipart/form-data">
-			<div class="col-md-6">
-			<div id="progressbox"><div id="progressbar"></div ><div id="statustxt">0%</div ></div>
-				<input id="input-1a" type="file" name="file1" id="file1"
-					class="file" data-show-preview="false">
+	<div class="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<form id="search">
+					<div class="form-group">
+						<label class="control-label">검색</label>
+						<div class="input-group">
+							<input type="text" class="form-control"
+								placeholder="Search for..."> <span
+								class="input-group-btn">
+								<button class="btn btn-default" type="button">Go!</button>
+							</span>
+						</div>
+						<!-- 
+						<label class="control-label">검색</label>
+						<div class="input-group">
+							<input type="text" class="form-control"
+								placeholder="Search for..."> <span
+								class="input-group-btn">
+								<button class="btn btn-default" type="button">Go!</button>
+							</span>
+						</div>
+						-->
+					</div>
+				</form>
 			</div>
-		</form>
+			<div class="panel-body">
+				<form id="uploadForm" enctype="multipart/form-data" class="col-md-8">
+					<label>파일 업로드(<span id="statustxt">0%</span>)
+					</label> <input id="input-1a" type="file" name="file1" id="file1"
+						class="file" data-show-preview="false">
+				</form>
+				<button style="margin-top: 25px;" class="btn btn-primary"
+					type="submit">파일 다운로드</button>
+			</div>
+			<table class="table table-hover" style="font-size: 14px;">
+				<thead>
+					<tr style="background-color:#f5f5f5;">
+						<th>상품 ID</th>
+						<th>상품 타입</th>
+						<th>소재</th>
+						<th>색상</th>
+						<th>수량</th>
+						<th>사이즈</th>
+						<th>기본 사이즈</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="result" items="${list}">
+						<tr>
+							<td>${result.productId }</td>
+							<td>${result.productType }</td>
+							<td>${result.fabric }</td>
+							<td>${result.color }</td>
+							<td>${result.stockCnt }</td>
+							<td>${result.sizeInfo }</td>
+							<td>${result.baseSize }</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+			<div class="row" style="text-align: center;">
+				<ul class="pagination">
+					<li><a href="#">&laquo;</a></li>
+					<li><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">5</a></li>
+					<li><a href="#">&raquo;</a></li>
+				</ul>
+			</div>
+		</div>
 	</div>
 	<!-- <tiles:insertAttribute name="body" /> -->
 	<!-- body 끝 -->
 	<script>
-	 var progressbox     = $('#progressbox');
-	    var progressbar     = $('#progressbar');
-	    var statustxt   = $('#statustxt');
-	    var submitbutton    = $("input[type='submit']");
-	    var completed   = '0%';
-	    
+		var progressbox = $('#progressbox');
+		var progressbar = $('#progressbar');
+		var statustxt = $('#statustxt');
+		var submitbutton = $("input[type='submit']");
+		var completed = '0%';
+
 		$('#uploadForm').ajaxForm({
 			url : "upload",
 			type : "post",
@@ -77,17 +142,17 @@
 					alert("업로드 도중 오류가 발생하였습니다.");
 				}
 			},
-	        uploadProgress: function(event, position, total, percentComplete) { //on progress
-	            progressbar.width(percentComplete + '%') //update progressbar percent complete
-	            $('#statustxt').html(percentComplete + '%'); //update status text
-	            if(percentComplete>50) {
-	                statustxt.css('color','#fff'); //change status text to white after 50%
-	            }
-	        },
-	        complete: function(response) { // on complete
-	           // output.html("완료"); //update element with received data
-	           // myform.resetForm();  // reset form
-	        }
+			uploadProgress : function(event, position, total, percentComplete) { //on progress
+				progressbar.width(percentComplete + '%') //update progressbar percent complete
+				$('#statustxt').html(percentComplete + '%'); //update status text
+				if (percentComplete > 50) {
+					statustxt.css('color', '#fff'); //change status text to white after 50%
+				}
+			},
+			complete : function(response) { // on complete
+				// output.html("완료"); //update element with received data
+				// myform.resetForm();  // reset form
+			}
 		});
 	</script>
 </body>
