@@ -2,9 +2,11 @@ package com.jshan.girlsRule.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.jshan.girlsRule.service.HomeService;
+import com.jshan.girlsRule.util.PagingHelper;
 import com.jshan.girlsRule.vo.ProductInfo;
 
 /**
@@ -49,8 +53,18 @@ public class HomeController {
 
 		model.addAttribute("serverTime", formattedDate);
 		
+		List<ProductInfo> total = service.readTotalInfo();
+		int totalCnt = total.size();
+		int rowRange = 10;
+		int curPage = 1;
+		int pageRange = 10;
+		int startIndex = ((curPage - 1) * rowRange);
+		int endIndex = (curPage * rowRange);	    
+		   
 		//테이블
-		List<ProductInfo> list = service.readInfo();
+		List<ProductInfo> list = service.readInfo(startIndex, endIndex, rowRange);
+		String pagingHtml = PagingHelper.instance.getPaging(totalCnt, rowRange, curPage, pageRange);	
+		model.addAttribute("paging", pagingHtml);
 		model.addAttribute("list", list);
 
 		return "home";
@@ -78,10 +92,25 @@ public class HomeController {
 		return "true";
 	}
 
-	@RequestMapping("/list")
+	@RequestMapping(value="/list",  method=RequestMethod.POST)
 	public @ResponseBody
-	List<ProductInfo> getList() {
-		List<ProductInfo> list = service.readInfo();
-		return list;
+	Map getList(@RequestBody ProductInfo info) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		List<ProductInfo> total = service.readTotalInfo();
+		int totalCnt = total.size();
+		int rowRange = 10;
+		int curPage = 1;
+		int pageRange = 10;
+		int startIndex = ((curPage - 1) * rowRange);
+		int endIndex = (curPage * rowRange);	    
+		   
+		//테이블
+		List<ProductInfo> list = service.readInfo(startIndex, endIndex, rowRange);
+		String pagingHtml = PagingHelper.instance.getPaging(totalCnt, rowRange, curPage, pageRange);	
+		map.put("list", list);
+		map.put("paging", pagingHtml);
+	
+		return map;
 	}
 }

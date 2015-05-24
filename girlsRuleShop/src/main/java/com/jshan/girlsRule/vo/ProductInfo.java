@@ -9,7 +9,7 @@ package com.jshan.girlsRule.vo;
  * @author choi
  * 
  */
-public class ProductInfo {
+public class ProductInfo extends PagingInfo{
 
 	private String productId;
 	private int productType;

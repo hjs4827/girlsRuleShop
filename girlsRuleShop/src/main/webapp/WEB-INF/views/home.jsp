@@ -53,6 +53,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<form id="search">
+					<input type="hidden" id="curPage" name="curPage" value="1">
 					<div class="form-group">
 						<label class="control-label">검색</label>
 						<div class="input-group">
@@ -112,13 +113,7 @@
 			</table>
 			<div class="row" style="text-align: center;">
 				<ul class="pagination">
-					<li><a href="#">&laquo;</a></li>
-					<li><a href="#">1</a></li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">4</a></li>
-					<li><a href="#">5</a></li>
-					<li><a href="#">&raquo;</a></li>
+					${paging}
 				</ul>
 			</div>
 		</div>
@@ -126,6 +121,29 @@
 	<!-- <tiles:insertAttribute name="body" /> -->
 	<!-- body 끝 -->
 	<script>
+		function goPage(page){
+			$("#curPage").val(page);
+			  $.ajax({
+                  type : "POST",
+                  url : "list",
+                  dataType :"json",
+                  data : JSON.stringify($("#search").serializeObject()),
+                  contentType : "application/json",
+                  success : onSuccess,
+                  error : onError
+    		 });
+		}
+		
+		function onSuccess(data){
+			alert("success");
+			console.log(data);
+		}
+		function onError(error){
+			alert("Error");
+			console.log(error);
+		}
+	
+	
 		var progressbox = $('#progressbox');
 		var progressbar = $('#progressbar');
 		var statustxt = $('#statustxt');
@@ -154,6 +172,23 @@
 				// myform.resetForm();  // reset form
 			}
 		});
+		
+		$.fn.serializeObject = function()
+		{
+		    var o = {};
+		    var a = this.serializeArray();
+		    $.each(a, function() {
+		        if (o[this.name] !== undefined) {
+		            if (!o[this.name].push) {
+		                o[this.name] = [o[this.name]];
+		            }
+		            o[this.name].push(this.value || '');
+		        } else {
+		            o[this.name] = this.value || '';
+		        }
+		    });
+		    return o;
+		};
 	</script>
 </body>
 </html>

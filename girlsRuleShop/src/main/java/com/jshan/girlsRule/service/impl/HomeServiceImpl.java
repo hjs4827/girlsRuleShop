@@ -30,12 +30,23 @@ public class HomeServiceImpl implements HomeService {
 	
 	@Autowired
 	BaseDao dao;
-
+	
 	@Override
-	public List<ProductInfo> readInfo() {
+	public List<ProductInfo> readTotalInfo() {
 		// TODO Auto-generated method stub
 		ProductInfo info = new ProductInfo();
 		List<ProductInfo> list = dao.getList("main.getProductList", info);
+		return list;
+	}
+
+	@Override
+	public List<ProductInfo> readInfo(int startIndex, int endIndex, int rowRange) {
+		// TODO Auto-generated method stub
+		ProductInfo info = new ProductInfo();
+		info.setStartIndex(startIndex);
+		info.setEndIndex(endIndex);
+		info.setRowRange(rowRange);
+		List<ProductInfo> list = dao.getList("main.getProductListForSearch", info);
 		return list;
 	}
 
