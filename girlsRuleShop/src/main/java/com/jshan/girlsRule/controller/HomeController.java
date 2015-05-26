@@ -100,7 +100,7 @@ public class HomeController {
 		List<ProductInfo> total = service.readTotalInfo();
 		int totalCnt = total.size();
 		int rowRange = 10;
-		int curPage = 1;
+		int curPage = info.getCurPage();
 		int pageRange = 10;
 		int startIndex = ((curPage - 1) * rowRange);
 		int endIndex = (curPage * rowRange);	    

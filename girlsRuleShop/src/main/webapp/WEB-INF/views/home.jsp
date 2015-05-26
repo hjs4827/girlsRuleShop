@@ -97,7 +97,7 @@
 						<th>기본 사이즈</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="main">
 					<c:forEach var="result" items="${list}">
 						<tr>
 							<td>${result.productId }</td>
@@ -111,8 +111,8 @@
 					</c:forEach>
 				</tbody>
 			</table>
-			<div class="row" style="text-align: center;">
-				<ul class="pagination">
+			<div class="row" style="text-align: center;" >
+				<ul class="pagination" id="pagingDiv">
 					${paging}
 				</ul>
 			</div>
@@ -126,17 +126,32 @@
 			  $.ajax({
                   type : "POST",
                   url : "list",
-                  dataType :"json",
-                  data : JSON.stringify($("#search").serializeObject()),
-                  contentType : "application/json",
+                  headers: { 
+                      "Accept" : "application/json; charset=utf-8",
+                      "Content-Type": "application/json; charset=utf-8"
+                  },
+                  data :  JSON.stringify($("#search").serializeObject()),
                   success : onSuccess,
                   error : onError
     		 });
 		}
 		
 		function onSuccess(data){
-			alert("success");
-			console.log(data);
+			var html_ = "";
+			for(var i = 0 ; i < data.list.length ; i++){
+				var item = data.list[i];
+				html_ += "<tr>";
+				html_ += "<td>"+item.productId+"</td>";
+				html_ += "<td>"+item.productType+"</td>";
+				html_ += "<td>"+item.fabric+"</td>";
+				html_ += "<td>"+item.color+"</td>";
+				html_ += "<td>"+item.stockCnt+"</td>";
+				html_ += "<td>"+item.sizeInfo+"</td>";
+				html_ += "<td>"+item.baseSize+"</td>";
+				html_ += "</tr>";
+			}
+			$("#main").html(html_);
+			$("#pagingDiv").html(data.paging);
 		}
 		function onError(error){
 			alert("Error");

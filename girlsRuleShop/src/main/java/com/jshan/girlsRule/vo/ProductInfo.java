@@ -1,5 +1,7 @@
 package com.jshan.girlsRule.vo;
 
+import javax.annotation.Resource;
+
 /**
  * 
  * product_id 제품번호 varchar(20) product_type 제품타입(신발, 상의, 하의) "char(1) 1 : 상의 2 :
@@ -9,6 +11,7 @@ package com.jshan.girlsRule.vo;
  * @author choi
  * 
  */
+@Resource
 public class ProductInfo extends PagingInfo{
 
 	private String productId;
