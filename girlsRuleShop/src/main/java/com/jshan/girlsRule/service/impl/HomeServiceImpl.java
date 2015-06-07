@@ -11,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,24 @@ public class HomeServiceImpl implements HomeService {
 	
 	@Autowired
 	BaseDao dao;
+	
+	@Override
+	public List<ProductInfo> readTotalInfo() {
+		// TODO Auto-generated method stub
+		ProductInfo info = new ProductInfo();
+		List<ProductInfo> list = dao.getList("main.getProductList", info);
+		return list;
+	}
 
 	@Override
-	public void readInfo() {
+	public List<ProductInfo> readInfo(int startIndex, int endIndex, int rowRange) {
 		// TODO Auto-generated method stub
-
+		ProductInfo info = new ProductInfo();
+		info.setStartIndex(startIndex);
+		info.setEndIndex(endIndex);
+		info.setRowRange(rowRange);
+		List<ProductInfo> list = dao.getList("main.getProductListForSearch", info);
+		return list;
 	}
 
 	@Override
@@ -56,7 +70,7 @@ public class HomeServiceImpl implements HomeService {
 			List<ProductInfo> list = new ArrayList<ProductInfo>();
 			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
 				HSSFRow row = sheet.getRow(i);
-				Iterator cells = row.cellIterator();
+				Iterator<Cell> cells = row.cellIterator();
 				int j = 0;
 				if (i == 0) {
 					while (cells.hasNext()) {
