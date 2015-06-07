@@ -2,38 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD SQL Map 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="main">
-	<select id="getAuthMenuList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		<!-- SELECT /*	main.getAuthMenuList 20140711	*/
-			a.screen_nm 
-			,a.screen_url
-			,c.cnt
-			,CASE WHEN c.cnt = 1 then 'one'
-				WHEN a.screen_url = '' THEN 'top'
-				ELSE 'sub' END menu_type
-		FROM tb_menu_info a with(nolock)
-			,tb_menu_auth b with(nolock)
-			,(SELECT 
-				group_id
-				,count(*)cnt 
-			FROM tb_menu_info a with(nolock)
-				,tb_menu_auth b with(nolock)
-			WHERE a.screen_id = b.screen_id
-			AND  a.use_yn = 'Y'
-			AND b.use_yn = 'Y'
-			GROUP BY group_id) c
-		WHERE a.screen_id = b.screen_id
-		AND a.group_id = c.group_id
-		AND a.use_yn = 'Y'
-		AND b.use_yn = 'Y'
-		ORDER BY a.screen_id -->
-		SELECT /* main.getAuthMenuList 20140711	*/
-			a.screen_nm
-			, CASE WHEN a.screen_id = a.group_id THEN 'parent' ELSE 'child' END AS menu_type
-			, ISNULL(a.screen_url,'') screen_url
-			, a.group_id
-		FROM 
+	<select id="getAuthMenuList" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		<!-- SELECT /* main.getAuthMenuList 20140711 */ a.screen_nm ,a.screen_url 
+			,c.cnt ,CASE WHEN c.cnt = 1 then 'one' WHEN a.screen_url = '' THEN 'top' 
+			ELSE 'sub' END menu_type FROM tb_menu_info a with(nolock) ,tb_menu_auth b 
+			with(nolock) ,(SELECT group_id ,count(*)cnt FROM tb_menu_info a with(nolock) 
+			,tb_menu_auth b with(nolock) WHERE a.screen_id = b.screen_id AND a.use_yn 
+			= 'Y' AND b.use_yn = 'Y' GROUP BY group_id) c WHERE a.screen_id = b.screen_id 
+			AND a.group_id = c.group_id AND a.use_yn = 'Y' AND b.use_yn = 'Y' ORDER BY 
+			a.screen_id -->
+		SELECT /* main.getAuthMenuList 20140711 */
+		a.screen_nm
+		, CASE WHEN
+		a.screen_id = a.group_id THEN 'parent' ELSE 'child' END AS
+		menu_type
+		,
+		ISNULL(a.screen_url,'') screen_url
+		, a.group_id
+		FROM
 		tb_menu_info a
-		WHERE a.use_yn = 'Y'
+		WHERE
+		a.use_yn = 'Y'
 		ORDER BY a.screen_id;
+	</select>
+
+	<resultMap id="productMap" type="com.jshan.girlsRule.vo.ProductInfo">
+		<id property="productId" column="product_id" />
+		<result property="productType" column="product_type" />
+		<result property="fabric" column="fabric" />
+		<result property="color" column="color" />
+		<result property="stockCnt" column="stock_cnt" />
+		<result property="sizeInfo" column="size_info" />
+		<result property="baseSize" column="base_size" />
+	</resultMap>
+	
+	<select id="getProductList" parameterType="com.jshan.girlsRule.vo.ProductInfo"
+		resultMap="productMap">
+		SELECT product_id, product_type, fabric, color, stock_cnt,
+		size_info, base_size
+		FROM PRODUCT_INFO
+	</select>
+
+	<select id="getProductListForSearch" parameterType="com.jshan.girlsRule.vo.ProductInfo"
+		resultMap="productMap">
+		SELECT product_id, product_type, fabric, color, stock_cnt,
+		size_info, base_size
+		FROM PRODUCT_INFO
+		limit #{startIndex}, #{rowRange} 
 	</select>
 </mapper>
