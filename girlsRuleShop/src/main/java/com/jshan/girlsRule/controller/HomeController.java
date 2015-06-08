@@ -94,7 +94,7 @@ public class HomeController {
 
 	@RequestMapping(value="/list",  method=RequestMethod.POST)
 	public @ResponseBody
-	Map getList(@RequestBody ProductInfo info) {
+	Map<String, Object> getList(@RequestBody ProductInfo info) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		
 		List<ProductInfo> total = service.readTotalInfo();
