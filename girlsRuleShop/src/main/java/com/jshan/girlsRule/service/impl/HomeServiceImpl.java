@@ -32,17 +32,19 @@ public class HomeServiceImpl implements HomeService {
 	@Autowired
 	BaseDao dao;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProductInfo> readTotalInfo() {
-		// TODO Auto-generated method stub
+		// 
 		ProductInfo info = new ProductInfo();
 		List<ProductInfo> list = dao.getList("main.getProductList", info);
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ProductInfo> readInfo(int startIndex, int endIndex, int rowRange) {
-		// TODO Auto-generated method stub
+		// 
 		ProductInfo info = new ProductInfo();
 		info.setStartIndex(startIndex);
 		info.setEndIndex(endIndex);
@@ -53,13 +55,13 @@ public class HomeServiceImpl implements HomeService {
 
 	@Override
 	public void exportExcel() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
 	@Override
 	public void saveInfo(MultipartFile file) {
-		// TODO Auto-generated method stub
+		// 
 		List<String> headers = new ArrayList<String>();
 
 		HSSFWorkbook wb = null;
