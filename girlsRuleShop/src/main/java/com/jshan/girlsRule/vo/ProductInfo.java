@@ -24,6 +24,7 @@ public class ProductInfo extends PagingInfo{
 
 	private ClothesTopDetails tops;
 	private ClothesPantsDetails pants;
+	
 
 	public ClothesTopDetails getTops() {
 		return tops;

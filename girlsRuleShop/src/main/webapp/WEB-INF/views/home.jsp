@@ -82,7 +82,7 @@
 					</label> <input id="input-1a" type="file" name="file1" id="file1"
 						class="file" data-show-preview="false">
 				</form>
-				<button style="margin-top: 25px;" class="btn btn-primary"
+				<button style="margin-top: 25px;" class="btn btn-primary" onclick="download();"
 					type="submit">파일 다운로드</button>
 			</div>
 			<table class="table table-hover" style="font-size: 14px;">
@@ -158,6 +158,9 @@
 			console.log(error);
 		}
 	
+		function download(){
+			window.location="download";
+		}
 	
 		var progressbox = $('#progressbox');
 		var progressbar = $('#progressbar');

@@ -8,7 +8,7 @@ import com.jshan.girlsRule.vo.ProductInfo;
 
 public interface HomeService {
 
-	public void saveInfo(MultipartFile file);
+	public void saveInfo(MultipartFile file) throws Exception;
 	
 	public List<ProductInfo> readInfo(int startIndex, int endIndex, int rowRange);
 	

@@ -1,17 +1,18 @@
 package com.jshan.girlsRule.service.impl;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,107 +54,125 @@ public class HomeServiceImpl implements HomeService {
 		return list;
 	}
 
-	@Override
-	public void exportExcel() {
-		// 
-
-	}
+	
 
 	@Override
-	public void saveInfo(MultipartFile file) {
-		// 
+	public void saveInfo(MultipartFile file) throws Exception {
 		List<String> headers = new ArrayList<String>();
 
-		HSSFWorkbook wb = null;
-		try {
-			wb = new HSSFWorkbook(file.getInputStream());
-			HSSFSheet sheet = wb.getSheetAt(0);
-			logger.debug("sheet name = " + wb.getSheetName(0));
+			Workbook w = Workbook.getWorkbook(file.getInputStream());
+			Sheet sheet = w.getSheet(0);
+			
 			List<ProductInfo> list = new ArrayList<ProductInfo>();
-			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
-				HSSFRow row = sheet.getRow(i);
-				Iterator<Cell> cells = row.cellIterator();
-				int j = 0;
-				if (i == 0) {
-					while (cells.hasNext()) {
-						HSSFCell cell = (HSSFCell) cells.next();
-						headers.add(cell.getStringCellValue());
-						logger.debug(cell.getStringCellValue());
-					}
-				}else{	
-					ProductInfo info = new ProductInfo();
-					ClothesPantsDetails pants = new ClothesPantsDetails();
-					ClothesTopDetails tops = new ClothesTopDetails();
-					info.setPants(pants);
-					info.setTops(tops);
-					while (cells.hasNext()) {						
-						HSSFCell cell = (HSSFCell) cells.next();
-						if(j == 0){
-							info.setProductId(cell.getStringCellValue());
-						}else if(j == 1){
-							info.setFabric(cell.getStringCellValue());
-						}else if(j == 2){
-							info.setColor(cell.getStringCellValue());
-						}else if(j == 3){
-							info.setProductType((int) cell.getNumericCellValue());
-						}else if(j == 4){
-							info.setStockCnt((int) cell.getNumericCellValue());
-						}else if(j == 5){
-							info.setSizeInfo(cell.getStringCellValue());
-						}else if(j == 6){
-							cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-							info.setBaseSize(cell.getStringCellValue());
-						}
-									
-						
-						if(j > 6 && info.getProductType() == 1){
-							if(j == 7){
-								tops.setShoulder((int) cell.getNumericCellValue());
-							}else if(j == 8){
-								tops.setChest((int) cell.getNumericCellValue());
-							}else if(j == 10){
-								tops.setSleeve((int) cell.getNumericCellValue());
-							}else if(j == 11){
-								tops.setArmhole((int) cell.getNumericCellValue());
-							}else if(j == 12){
-								tops.setTotalLength((int) cell.getNumericCellValue());
-							}else if(j == 13){
-								tops.setElastic((int) cell.getNumericCellValue());
-							}else if(j == 14){
-								tops.setThickness((int) cell.getNumericCellValue());
-							}else if(j == 15){
-								tops.setDiaphanousness((int) cell.getNumericCellValue());
-							}else if(j == 16){
-								tops.setLining((int) cell.getNumericCellValue());
-							}
-						}else if(j > 6 && info.getProductType() == 2){
-							if(j == 7){
-								pants.setWaist((int) cell.getNumericCellValue());
-							}else if(j == 8){
-								pants.setHip((int) cell.getNumericCellValue());
-							}else if(j == 9){
-								pants.setThigh((int) cell.getNumericCellValue());
-							}else if(j == 10){
-								pants.setLegOpeningBottom((int) cell.getNumericCellValue());
-							}else if(j == 11){
-								pants.setLegOpeningTop((int) cell.getNumericCellValue());
-							}else if(j == 12){
-								pants.setTotalLength((int) cell.getNumericCellValue());
-							}else if(j == 13){
-								pants.setElastic((int) cell.getNumericCellValue());
-							}else if(j == 14){
-								pants.setThickness((int) cell.getNumericCellValue());
-							}else if(j == 15){
-								pants.setDiaphanousness((int) cell.getNumericCellValue());
-							}else if(j == 16){
-								pants.setLining((int) cell.getNumericCellValue());
-							}
-						}
-						j++;
-					}
-					list.add(info);
-				}
-			}
+	        int header_row = 1;
+	    	 //row씩 읽기 
+	        for (int i = header_row; i < sheet.getRows(); i++) {
+	        	 //byte[] byte_ = sheet.getDrawing(i).getImageData();
+	        	ProductInfo vo = new ProductInfo();
+				ClothesPantsDetails pants = new ClothesPantsDetails();
+				ClothesTopDetails tops = new ClothesTopDetails();
+				vo.setPants(pants);
+				vo.setTops(tops);
+	        	 for (int j = 0; j < sheet.getColumns(); j++) {
+			          Cell cell = sheet.getCell(j, i);
+			          switch(j){
+			          	case 0:
+			          		vo.setProductId(cell.getContents());
+			          		break;
+			          	case 1:
+			          		vo.setFabric(cell.getContents());
+			          		break;
+			          	case 2:
+			          		vo.setColor(cell.getContents());
+			          		break;
+			          	case 3:
+			          		vo.setProductType(Integer.parseInt(cell.getContents()));
+			          		break;
+			          	case 4:
+			          		vo.setStockCnt(Integer.parseInt(cell.getContents()));
+			          		break;				          		
+			          	case 5:
+			          		vo.setSizeInfo(cell.getContents());
+			          		break;
+			          	case 6:
+			          		vo.setBaseSize(cell.getContents());
+			          		break;
+			          	default:
+			          		break;
+			          }		
+			          if(vo.getProductType() == 1){
+			        	  switch(j){
+				        	  case 7:
+				        		  tops.setShoulder(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 8:
+				        		  tops.setChest(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 10:
+				        		  tops.setSleeve(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 11:
+				        		  tops.setArmhole(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 12:
+				        		  tops.setTotalLength(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 13:
+				        		  tops.setElastic(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 14:
+				        		  tops.setThickness(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 15:
+				        		  tops.setDiaphanousness(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  case 16:
+				        		  tops.setLining(Integer.parseInt(cell.getContents()));
+				        		  break;
+				        	  default:
+				        			 break;
+			        	  }
+			          }else if(vo.getProductType() == 2){
+			        	  switch(j){
+			        	  case 7:
+			        			pants.setWaist(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 8:
+			        		  pants.setHip(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 9:
+			        		  pants.setThigh(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 10:
+			        		  pants.setLegOpeningBottom(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 11:
+			        		  pants.setLegOpeningTop(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 12:
+			        		  pants.setTotalLength(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 13:
+			        		  pants.setElastic(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 14:
+			        		  pants.setThickness(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 15:
+			        		  pants.setDiaphanousness(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  case 16:
+			        		  pants.setLining(Integer.parseInt(cell.getContents()));
+			        		  break;
+			        	  default:
+			        			 break;
+			        	  }
+			          }
+	        	 }
+	        	 logger.info(vo.toString());
+		         list.add(vo);
+	        }
+			
 			
 			for(ProductInfo info : list){
 				Map<String, Object> params = new HashMap<String, Object>();
@@ -165,16 +184,21 @@ public class HomeServiceImpl implements HomeService {
 				params.put("size_info", info.getSizeInfo());
 				params.put("base_size", info.getBaseSize());
 				System.out.println(params.toString());
-				dao.insert("test.testInsertProductInfo",params);
+				dao.insert("test.testInsertProductInfo",info);
 				
 				info.getTops().setProductId(info.getProductId());
 				info.getPants().setProductId(info.getProductId());
 				dao.insert("test.testInsertClothesTops",info.getTops());
 				dao.insert("test.testInsertClothesPants", info.getPants());
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		
 	}
 
+
+
+	@Override
+	public void exportExcel() {
+		// TODO Auto-generated method stub
+		
+	}
 }
