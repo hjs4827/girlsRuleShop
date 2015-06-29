@@ -1,5 +1,6 @@
 package com.jshan.girlsRule.controller;
 
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -89,24 +90,41 @@ public class HomeController {
 
 	@RequestMapping("/upload")
 	public @ResponseBody
-	String getUploadFile(HttpServletRequest request) {
+	String getUploadFile(HttpServletRequest request) throws Exception {
 
+		String result = "true";
 		try {
+			
 			Assert.state(request instanceof MultipartHttpServletRequest,
 					"request !instanceof MultipartHttpServletRequest");
 			MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
-
+			
 			Iterator<String> files = mRequest.getFileNames();
+			int i = 0;
 			while (files.hasNext()) {
 				String file_name = files.next();
 				logger.debug("=<<<<" + file_name);
 				MultipartFile file = mRequest.getFile(file_name);
-				service.saveInfo(file);
+				byte[] bytes = file.getBytes();
+				logger.info(file.getName()+ file.getOriginalFilename());
+				// get the content in bytes
+				FileOutputStream out = new FileOutputStream("/Users/choesin-yeong/devlop/workspace/"+file.getOriginalFilename());
+				out.write(bytes);
+				out.close();
+				//service.saveInfo(file);
+				i++;
+			}
+			
+			if(i == 0){
+				result = "false";
+				throw new Exception("no file!");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			result = "false";
+			throw new Exception("업로드 도중 오류가 발생하였습니다.");
 		}
-		return "true";
+		return result;
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
