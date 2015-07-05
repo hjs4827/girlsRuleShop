@@ -21,10 +21,45 @@
 
 	
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/views/" />
-		<property name="suffix" value=".jsp" />
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="contentNegotiationManager">
+			<bean class="org.springframework.web.accept.ContentNegotiationManager">
+				<constructor-arg>
+					<bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+						<constructor-arg>
+					    	<!-- 맵핑될 확장자 정의 -->
+							<map>
+					            <entry key="atom" value="application/atom+xml"/>
+					            <entry key="html" value="text/html"/>
+					            <entry key="json" value="application/json"/>
+					        </map>
+						</constructor-arg>
+					</bean>
+				</constructor-arg>
+			</bean>
+		</property>
+	        
+	    <property name="defaultViews">
+	        <list>
+	            <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	        </list>
+	    </property>
+	    
+	    <property name="viewResolvers">
+	        <list>
+	            <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+	            <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	                <property name="prefix" value="/WEB-INF/views/"/>
+	                <property name="suffix" value=".jsp"/>
+	            </bean>
+	        </list>
+	    </property>
+	    
+	    
+	    
 	</bean>
+
+
 	
 	<!-- tiles -->
 	<bean class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"/>
@@ -40,7 +75,7 @@
 	<bean id="multipartResolver"
          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize">
-            <value>10000000</value>
+            <value>760330900000</value>
         </property>
 	</bean>
 	

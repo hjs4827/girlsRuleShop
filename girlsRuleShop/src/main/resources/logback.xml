@@ -3,12 +3,13 @@
 <configuration
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="logback.xsd">
+    
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>▶ %-5level %d{HH:mm:ss.SSS} [%thread] %logger{36}[%method:%line] - %msg%n</pattern>
         </encoder>
     </appender>
- 
+ 	
     <root level="DEBUG">
         <appender-ref ref="console" />
     </root>

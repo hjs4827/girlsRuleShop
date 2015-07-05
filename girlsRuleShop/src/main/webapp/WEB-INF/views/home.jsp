@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>
 <html>
@@ -10,7 +10,7 @@
 <script src="js/jquery/jquery.min.js"></script>
 <script src="js/jquery/jquery.form.js"></script>
 <script src="js/bootstrap/bootstrap.min.js"></script>
-<script src="js/bootstrap_fileinput/fileinput.min.js"></script>
+<script src="js/bootstrap_fileinput/fileinput.js"></script>
 </head>
 <body>
 	<!--  header  시작 -->
@@ -53,6 +53,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<form id="search">
+					<input type="hidden" id="curPage" name="curPage" value="1">
 					<div class="form-group">
 						<label class="control-label">검색</label>
 						<div class="input-group">
@@ -75,18 +76,36 @@
 					</div>
 				</form>
 			</div>
+			<div class="modal js-loading-bar" style="top:20%">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+						파일 업로드
+						</div>
+						<div class="modal-body">
+							<div class="progress progress-popup">
+								<div class="progress-bar progress-bar-striped active" id="progressbar"
+									aria-valuenow="{percent}" aria-valuemin="0" aria-valuemax="100"
+									style="width: {percent">
+									<span id="statustxt">0%</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 			<div class="panel-body">
-				<form id="uploadForm" enctype="multipart/form-data" class="col-md-8">
-					<label>파일 업로드(<span id="statustxt">0%</span>)
-					</label> <input id="input-1a" type="file" name="file1" id="file1"
-						class="file" data-show-preview="false">
+				 <form id="uploadForm" enctype="multipart/form-data" class="col-md-10">
+					<label>파일 업로드 </label> <input id="input-1a" data-show-caption="true" data-show-preview="false" type="file" class="file" name="file1">
 				</form>
 				<button style="margin-top: 25px;" class="btn btn-primary"
-					type="submit">파일 다운로드</button>
+					onclick="download();" type="submit">파일 다운로드</button>
 			</div>
 			<table class="table table-hover" style="font-size: 14px;">
 				<thead>
-					<tr style="background-color:#f5f5f5;">
+					<tr style="background-color: #f5f5f5;">
 						<th>상품 ID</th>
 						<th>상품 타입</th>
 						<th>소재</th>
@@ -96,7 +115,7 @@
 						<th>기본 사이즈</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="main">
 					<c:forEach var="result" items="${list}">
 						<tr>
 							<td>${result.productId }</td>
@@ -111,14 +130,7 @@
 				</tbody>
 			</table>
 			<div class="row" style="text-align: center;">
-				<ul class="pagination">
-					<li><a href="#">&laquo;</a></li>
-					<li><a href="#">1</a></li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">4</a></li>
-					<li><a href="#">5</a></li>
-					<li><a href="#">&raquo;</a></li>
+				<ul class="pagination" id="pagingDiv">${paging}
 				</ul>
 			</div>
 		</div>
@@ -126,34 +138,102 @@
 	<!-- <tiles:insertAttribute name="body" /> -->
 	<!-- body 끝 -->
 	<script>
+		function goPage(page) {
+			$("#curPage").val(page);
+			$.ajax({
+				type : "POST",
+				url : "list",
+				headers : {
+					"Accept" : "application/json; charset=utf-8",
+					"Content-Type" : "application/json; charset=utf-8"
+				},
+				data : JSON.stringify($("#search").serializeObject()),
+				success : onSuccess,
+				error : onError
+			});
+		}
+
+		function onSuccess(data) {
+			var html_ = "";
+			for (var i = 0; i < data.list.length; i++) {
+				var item = data.list[i];
+				html_ += "<tr>";
+				html_ += "<td>" + item.productId + "</td>";
+				html_ += "<td>" + item.productType + "</td>";
+				html_ += "<td>" + item.fabric + "</td>";
+				html_ += "<td>" + item.color + "</td>";
+				html_ += "<td>" + item.stockCnt + "</td>";
+				html_ += "<td>" + item.sizeInfo + "</td>";
+				html_ += "<td>" + item.baseSize + "</td>";
+				html_ += "</tr>";
+			}
+			$("#main").html(html_);
+			$("#pagingDiv").html(data.paging);
+		}
+		function onError(error) {
+			alert("Error");
+			"/Users/choesin-yeong/Downloads/kartik-v-bootstrap-fileinput-e0f18d6/js/fileinput_locale_LANG.js"
+			console.log(error);
+		}
+
+		function download() {
+			window.location = "download";
+		}
+
 		var progressbox = $('#progressbox');
 		var progressbar = $('#progressbar');
 		var statustxt = $('#statustxt');
 		var submitbutton = $("input[type='submit']");
-		var completed = '0%';
-
+		var completed = '0%';		
+		
 		$('#uploadForm').ajaxForm({
 			url : "upload",
 			type : "post",
-			success : function(data) {
+			success : function(data) {	
+				var $modal = $('.js-loading-bar');
+				$modal.modal('hide');
 				if (data == "true") {
 					alert("업로드 성공하였습니다.");
+					$("#input-1a").fileinput("clear");
 				} else {
-					alert("업로드 도중 오류가 발생하였습니다.");
+					alert("업로드 처리도중 오류가 발생하였습니다.");
 				}
+			},
+			error : function(data){
+				$('#statustxt').html(0 + '%');
+				progressbar.width(0 + '%');
+				var $modal = $('.js-loading-bar');
+				$modal.modal('hide');
+				alert("업로드 처리 도중 오류가 발생하였습니다. 재시도 해주세요!");
+			},
+			beforeSend : function() {
+				var $modal = $('.js-loading-bar');
+				$modal.modal('show');
 			},
 			uploadProgress : function(event, position, total, percentComplete) { //on progress
-				progressbar.width(percentComplete + '%') //update progressbar percent complete
-				$('#statustxt').html(percentComplete + '%'); //update status text
-				if (percentComplete > 50) {
-					statustxt.css('color', '#fff'); //change status text to white after 50%
+				if(eval(percentComplete) > 97){
+					percentComplete = 98;
 				}
-			},
-			complete : function(response) { // on complete
-				// output.html("완료"); //update element with received data
-				// myform.resetForm();  // reset form
+				progressbar.width(percentComplete + '%'); //update progressbar percent complete
+				$('#statustxt').html(percentComplete + '%'); //update status text
 			}
 		});
+	
+		$.fn.serializeObject = function() {
+			var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+				if (o[this.name] !== undefined) {
+					if (!o[this.name].push) {
+						o[this.name] = [ o[this.name] ];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return o;
+		};
 	</script>
 </body>
 </html>

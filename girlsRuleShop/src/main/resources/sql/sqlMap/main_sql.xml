@@ -36,11 +36,19 @@
 		<result property="sizeInfo" column="size_info" />
 		<result property="baseSize" column="base_size" />
 	</resultMap>
-
+	
 	<select id="getProductList" parameterType="com.jshan.girlsRule.vo.ProductInfo"
 		resultMap="productMap">
 		SELECT product_id, product_type, fabric, color, stock_cnt,
 		size_info, base_size
 		FROM PRODUCT_INFO
+	</select>
+
+	<select id="getProductListForSearch" parameterType="com.jshan.girlsRule.vo.ProductInfo"
+		resultMap="productMap">
+		SELECT product_id, product_type, fabric, color, stock_cnt,
+		size_info, base_size
+		FROM PRODUCT_INFO
+		limit #{startIndex}, #{rowRange} 
 	</select>
 </mapper>
