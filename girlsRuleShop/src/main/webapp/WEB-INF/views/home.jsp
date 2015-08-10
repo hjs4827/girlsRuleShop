@@ -1,53 +1,27 @@
-<%@ page language="java" contentType="text/html;" pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>
-<html>
-<head>
-<title>Home</title>
-<link rel="stylesheet" href="css/bootstrap.min.css" />
-<link rel="stylesheet" href="css/fileinput.min.css" />
-<script src="js/jquery/jquery.min.js"></script>
-<script src="js/jquery/jquery.form.js"></script>
-<script src="js/bootstrap/bootstrap.min.js"></script>
-<script src="js/bootstrap_fileinput/fileinput.js"></script>
-</head>
 <body>
-	<!--  header  시작 -->
-	<nav class="navbar navbar-default">
-		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">ADMIN</a>
-			</div>
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse"
-				id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li><a href="#">상품 목록<span class="sr-only">(current)</span></a></li>
-					<li><a href="#">상품 상세</a></li>
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li>
-						<form class="navbar-form navbar-left" role="search">
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="Id">
-								<input type="text" class="form-control" placeholder="Password">
-							</div>
-							<button type="submit" class="btn btn-default">Login</button>
-						</form>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-	<!-- header 끝 -->
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 	<!--  body 시작 -->
 	<div class="container">
 		<div class="panel panel-default">
@@ -117,7 +91,7 @@
 				</thead>
 				<tbody id="main">
 					<c:forEach var="result" items="${list}">
-						<tr>
+						<tr onclick="showModal('${result.productId}');">
 							<td>${result.productId }</td>
 							<td>${result.productType }</td>
 							<td>${result.fabric }</td>
@@ -130,8 +104,7 @@
 				</tbody>
 			</table>
 			<div class="row" style="text-align: center;">
-				<ul class="pagination" id="pagingDiv">${paging}
-				</ul>
+				<ul class="pagination" id="pagingDiv">${paging}</ul>
 			</div>
 		</div>
 	</div>
@@ -234,6 +207,10 @@
 			});
 			return o;
 		};
+		
+		function showModal(id){
+			alert(id);
+			 $('#myModal').modal('show');
+		}
 	</script>
 </body>
-</html>

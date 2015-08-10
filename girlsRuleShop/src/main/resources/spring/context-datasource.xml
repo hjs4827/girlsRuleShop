@@ -9,9 +9,9 @@
 	<util:properties id="contextProperties" location="classpath:/properties/dbInfo.properties" />
 	
 	<!-- flyway -->
-	<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
+<!-- 	<bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate"> -->
+<!-- 		<property name="dataSource" ref="dataSource"/> -->
+<!-- 	</bean> -->
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" 
 		p:driverClassName="#{contextProperties.driver}"
